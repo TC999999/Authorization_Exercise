@@ -22,7 +22,7 @@ def homepage():
     return redirect("/register")
 
 
-@app.route("/users/<username>")
+@app.route("/users/<string:username>")
 def user_page(username):
     user = User.query.get_or_404(username)
     if "user_un" not in session:
@@ -56,8 +56,7 @@ def register_user():
         try:
             db.session.commit()
         except IntegrityError:
-            form.username.errors.append("Username taken. Please pick another.")
-            form.email.errors.append("Email taken. Please pick another.")
+            form.username.errors.append("Username/Email taken. Please pick another.")
             return render_template("register.html", form=form)
         session["user_un"] = new_user.username
         flash("Welcome! Successfully Created Your Account!", "success")
@@ -96,7 +95,7 @@ def logout_user():
     return redirect("/")
 
 
-@app.route("/users/<username>/delete", methods=["POST"])
+@app.route("/users/<string:username>/delete", methods=["POST"])
 def delete_user(username):
     user = User.query.get_or_404(username)
     if "user_un" not in session:
@@ -114,7 +113,7 @@ def delete_user(username):
     return redirect("/")
 
 
-@app.route("/users/<username>/feedback/add", methods=["GET", "POST"])
+@app.route("/users/<string:username>/feedback/add", methods=["GET", "POST"])
 def add_feedback(username):
     user = User.query.get_or_404(username)
     if "user_un" not in session:
